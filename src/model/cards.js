@@ -40,6 +40,11 @@ export default {
     initList(state, {payload}) {
       const cardsList = [...payload]
       return {cardsList}
+    },
+    addOne(state, {payload}) {
+      return {
+        cardsList: [...state.cardsList, payload]
+      }
     }
   }
 }

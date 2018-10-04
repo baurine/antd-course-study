@@ -1,6 +1,8 @@
 import React from 'react'
-import { Table } from 'antd'
+import { Table, Modal, Button, Form, Input } from 'antd'
 import { connect } from 'dva'
+
+const FormItem = Form.Item
 
 function mapStateToProps(state) {
   return {
@@ -26,14 +28,41 @@ class List extends React.Component {
     }
   ]
 
+  state = {
+    modalVisible: false
+  }
+
   componentDidMount() {
     this.props.dispatch({
       type: 'cards/queryList'
     })
   }
 
+  showModal = () => {
+    this.setState({modalVisible: true})
+  }
+
+  handleCancel = () => {
+    this.setState({modalVisible: false})
+  }
+
+  handleOk = () => {
+    const { dispatch, form: { validateFields }} = this.props
+    validateFields((err, values) => {
+      if (!err) {
+        dispatch({
+          type: 'cards/addOne',
+          payload: values
+        })
+        this.setState({modalVisible: false})
+      }
+    })
+  }
+
   render() {
-    const { cardsList, cardsLoading } = this.props
+    const { cardsList, cardsLoading, form: { getFieldDecorator } } = this.props
+    const { modalVisible } = this.state
+
     return (
       <div>
         <Table
@@ -41,9 +70,32 @@ class List extends React.Component {
           dataSource={cardsList}
           loading={cardsLoading}
           rowKey="name"/>
+        <Button onClick={this.showModal}>新建</Button>
+        <Modal title='新建记录'
+               visible={modalVisible}
+               onOk={this.handleOk}
+               onCancel={this.handleCancel}>
+          <Form>
+            <FormItem label="名称">
+              {
+                getFieldDecorator('name', {rules: [{required: true}]})(<Input/>)
+              }
+            </FormItem>
+            <FormItem label="描述">
+              {
+                getFieldDecorator('desc')(<Input/>)
+              }
+            </FormItem>
+            <FormItem label="链接">
+              {
+                getFieldDecorator('url', {rules: [{type: 'url'}]})(<Input/>)
+              }
+            </FormItem>
+          </Form>
+        </Modal>
       </div>
     )
   }
 }
 
-export default connect(mapStateToProps)(List)
+export default connect(mapStateToProps)(Form.create()(List))
