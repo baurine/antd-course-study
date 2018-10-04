@@ -1,6 +1,7 @@
 import React from 'react'
 import { Table, Modal, Button, Form, Input } from 'antd'
 import { connect } from 'dva'
+import SampleChart from '../../components/SampleChart';
 
 const FormItem = Form.Item
 
@@ -29,7 +30,8 @@ class List extends React.Component {
   ]
 
   state = {
-    modalVisible: false
+    modalVisible: false,
+    statisticVisible: false
   }
 
   componentDidMount() {
@@ -59,9 +61,17 @@ class List extends React.Component {
     })
   }
 
+  showStatistic = () => {
+    this.setState({statisticVisible: true})
+  }
+
+  hideStatistic = () => {
+    this.setState({statisticVisible: false})
+  }
+
   render() {
     const { cardsList, cardsLoading, form: { getFieldDecorator } } = this.props
-    const { modalVisible } = this.state
+    const { modalVisible, statisticVisible } = this.state
 
     return (
       <div>
@@ -71,6 +81,7 @@ class List extends React.Component {
           loading={cardsLoading}
           rowKey="name"/>
         <Button onClick={this.showModal}>新建</Button>
+        <Button onClick={this.showStatistic}>图表</Button>
         <Modal title='新建记录'
                visible={modalVisible}
                onOk={this.handleOk}
@@ -92,6 +103,9 @@ class List extends React.Component {
               }
             </FormItem>
           </Form>
+        </Modal>
+        <Modal visible={statisticVisible} onCancel={this.hideStatistic}>
+          <SampleChart/>
         </Modal>
       </div>
     )
