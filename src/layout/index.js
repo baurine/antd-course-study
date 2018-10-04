@@ -10,11 +10,18 @@ export default class BasicLayout extends React.Component {
     return (
       <Layout>
         <Sider width={256} style={{minHeight: '100vh'}}>
+          <div style={{height:'32px',background: 'rgba(255,255,255,0.2', margin: '16px'}}/>
           <Menu theme='dark' mode='inline' defaultSelectedKeys={['1']}>
             <Menu.Item key='1'>
               <Link to='/helloworld'>
                 <Icon type='pie-chart'/>
                 <span>HelloWorld</span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key='5'>
+              <Link to='/puzzlecards'>
+                <Icon type='pie-chart'/>
+                <span>PuzzleCards</span>
               </Link>
             </Menu.Item>
             <SubMenu
